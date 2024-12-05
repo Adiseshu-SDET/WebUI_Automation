@@ -19,10 +19,16 @@ public class SubmitOrder extends BaseTest {
 	@Test
 	public void submitOrder() throws IOException {
 
+		loadTestData(); // Load test data once
+
+		String username = credentials.get("username");
+		String password = credentials.get("password");
+
 		Cart_Page cartPage = new Cart_Page(driver);
 		checkOutPage cp = new checkOutPage(driver);
 
-		landingPage.loginToApplication("jampaniadi503@gmail.com", "Web@Automation1");
+		landingPage.loginToApplication(username, password);
+
 		Productcatlog_page productCatolog = new Productcatlog_page(driver);
 		List<WebElement> products = productCatolog.getProductList();
 		productCatolog.addProdcutToCart("ZARA COAT 3");
@@ -46,7 +52,7 @@ public class SubmitOrder extends BaseTest {
 		System.out.println(actulaText);
 
 		Assert.assertTrue(actulaText.equalsIgnoreCase("Thankyou for the order."));
-		
+
 
 	}
 

@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
@@ -19,7 +21,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.manager.SeleniumManager;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-
+import JTAS.Resources.ExcelUtils;
 import JTAS.WebAutomationPageClasses.login_Page;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -27,6 +29,9 @@ public class BaseTest {
 
 	public WebDriver driver;
 	public login_Page landingPage;
+
+	protected Map<String, String> credentials = new HashMap<>();
+
 
 	public WebDriver initializeDriver() throws IOException {
 
@@ -84,6 +89,25 @@ public class BaseTest {
 
 		return screenshotPath; // Return the path to the screenshot
 	}
+
+
+	public void loadTestData() throws IOException {
+		// Using a relative path that resolves to an absolute path
+		String excelPath = System.getProperty("user.dir") + "/resources/TestData.xlsx";
+		String sheetName = "Getdata";
+
+		ExcelUtils excelUtils = new ExcelUtils(excelPath, sheetName);
+
+		// Assuming you want data from Row 1
+		Map<String, String> testData = excelUtils.getRowDataByColumnNames(1);
+
+		// Store the data in the credentials map
+		credentials.put("username", testData.get("username"));
+		credentials.put("password", testData.get("password"));
+
+		excelUtils.closeWorkbook();
+	}
+
 
 	@BeforeMethod
 	public login_Page launchApplication() throws IOException {
