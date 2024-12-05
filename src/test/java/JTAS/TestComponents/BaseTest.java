@@ -21,7 +21,6 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.manager.SeleniumManager;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-
 import JTAS.Resources.ExcelUtils;
 import JTAS.WebAutomationPageClasses.login_Page;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -30,7 +29,9 @@ public class BaseTest {
 
 	public WebDriver driver;
 	public login_Page landingPage;
+
 	protected Map<String, String> credentials = new HashMap<>();
+
 
 	public WebDriver initializeDriver() throws IOException {
 
@@ -89,6 +90,7 @@ public class BaseTest {
 		return screenshotPath; // Return the path to the screenshot
 	}
 
+
 	public void loadTestData() throws IOException {
 		// Using a relative path that resolves to an absolute path
 		String excelPath = System.getProperty("user.dir") + "/resources/TestData.xlsx";
@@ -105,6 +107,7 @@ public class BaseTest {
 
 		excelUtils.closeWorkbook();
 	}
+
 
 	@BeforeMethod
 	public login_Page launchApplication() throws IOException {

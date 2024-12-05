@@ -28,6 +28,7 @@ public class SubmitOrder extends BaseTest {
 		checkOutPage cp = new checkOutPage(driver);
 
 		landingPage.loginToApplication(username, password);
+
 		Productcatlog_page productCatolog = new Productcatlog_page(driver);
 		List<WebElement> products = productCatolog.getProductList();
 		productCatolog.addProdcutToCart("ZARA COAT 3");
@@ -51,6 +52,7 @@ public class SubmitOrder extends BaseTest {
 		System.out.println(actulaText);
 
 		Assert.assertTrue(actulaText.equalsIgnoreCase("Thankyou for the order."));
+
 
 	}
 
