@@ -32,12 +32,22 @@ public class login_Page extends AbstractComponent{
 
 	@FindBy(css = ".mb-3")
 	List<WebElement> prodcuts;
+	
+	@FindBy(using  = ".mb-3")
+	List<WebElement> prodcuts1;
 
 	public void loginToApplication(String enterUserName, String enterPassword) {
 
 		userName.sendKeys(enterUserName);
 		password.sendKeys(enterPassword);
 		loginButton.click();
+	}
+	
+	public void myProfile(String enterUserName, String enterPassword) {
+		userName.sendKeys(enterUserName);
+		password.sendKeys(enterPassword);
+		loginButton.click();
+		
 	}
 
 	public void goTo() {

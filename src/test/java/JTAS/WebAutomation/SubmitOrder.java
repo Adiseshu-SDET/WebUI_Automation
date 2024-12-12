@@ -14,6 +14,7 @@ import JTAS.WebAutomationPageClasses.Orders_page;
 import JTAS.WebAutomationPageClasses.Productcatlog_page;
 import JTAS.WebAutomationPageClasses.checkOutPage;
 
+
 public class SubmitOrder extends BaseTest {
 
 	@Test
