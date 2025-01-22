@@ -28,7 +28,7 @@ public class Cart_Page extends AbstractComponent {
 
 	public boolean verifyProductDisplay() {
 
-		return cartProducts.stream().anyMatch(cartProduct -> cartProduct.getText().equalsIgnoreCase("ZARA COAT 3"));
+		return cartProducts.stream().anyMatch(cartProduct -> cartProduct.getText().equalsIgnoreCase("IPHONE 13 PRO"));
 
 	}
 

@@ -32,7 +32,7 @@ public class SubmitOrder extends BaseTest {
 
 		Productcatlog_page productCatolog = new Productcatlog_page(driver);
 		List<WebElement> products = productCatolog.getProductList();
-		productCatolog.addProdcutToCart("ZARA COAT 3");
+		productCatolog.addProdcutToCart("IPHONE 13 PRO");
 
 		productCatolog.waitForToastMessage();
 
