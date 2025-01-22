@@ -1,4 +1,4 @@
-name: Run UI Tests
+name: Run UI Tests with WebDriverManager
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v3
 
       # Step 2: Install Chrome and dependencies
-      - name: Install Chrome and dependencies
+      - name: Install Chrome
         run: |
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
@@ -51,6 +51,7 @@ jobs:
       - name: Debug Chrome Environment
         run: |
           google-chrome --version
+          chromedriver --version
           ls -la /usr/bin/google-chrome
           echo $DISPLAY
 
@@ -58,7 +59,7 @@ jobs:
       - name: Install Maven dependencies
         run: mvn install -DskipTests=true
 
-      # Step 8: Run UI Tests
+      # Step 8: Run Selenium UI Tests
       - name: Run UI Tests
         run: mvn test
 
