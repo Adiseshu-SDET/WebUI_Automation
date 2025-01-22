@@ -2,15 +2,15 @@ package JTAS.TestComponents;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -18,9 +18,9 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.manager.SeleniumManager;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+
 import JTAS.Resources.ExcelUtils;
 import JTAS.WebAutomationPageClasses.login_Page;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -48,7 +48,15 @@ public class BaseTest {
 		if (browserName.contains("chrome")) {
 
 //			WebDriverManager.chromedriver().setup();
+			Path tempDir = Files.createTempDirectory("chrome-user-data");
 			ChromeOptions options = new ChromeOptions();
+			
+			options.addArguments("--no-sandbox");       // Bypass OS security model
+		    options.addArguments("--disable-dev-shm-usage"); // Overcome limited resource problems
+		    options.addArguments("--remote-allow-origins=*"); // Address Chrome's CORS policy changes
+		    options.addArguments("--disable-gpu");     // Disable GPU (Optional)
+		    options.addArguments("--headless=new");    // Use headless mode
+		    options.addArguments("--user-data-dir=" + tempDir.toAbsolutePath().toString()); // Unique user data directory
 
 			if (browserName.contains("headless")) {
 				options.addArguments("headless");
