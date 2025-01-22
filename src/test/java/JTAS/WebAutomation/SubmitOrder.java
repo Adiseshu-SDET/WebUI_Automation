@@ -14,7 +14,6 @@ import JTAS.WebAutomationPageClasses.Orders_page;
 import JTAS.WebAutomationPageClasses.Productcatlog_page;
 import JTAS.WebAutomationPageClasses.checkOutPage;
 
-
 public class SubmitOrder extends BaseTest {
 
 	@Test
@@ -53,7 +52,6 @@ public class SubmitOrder extends BaseTest {
 		System.out.println(actulaText);
 
 		Assert.assertTrue(actulaText.equalsIgnoreCase("Thankyou for the order."));
-
 
 	}
 

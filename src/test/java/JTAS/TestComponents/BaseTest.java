@@ -37,7 +37,7 @@ public class BaseTest {
 
 		Properties prop = new Properties();
 		FileInputStream fis = new FileInputStream(
-				System.getProperty("user.dir") + "\\src\\main\\java\\JTAS\\Resources\\GlobalData.properties");
+				System.getProperty("user.dir") + "/src/main/java/JTAS/Resources/GlobalData.properties");
 		prop.load(fis);
 
 		String browserName = System.getProperty("browser") != null ? System.getProperty("browser")
