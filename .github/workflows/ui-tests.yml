@@ -1,12 +1,18 @@
-name: Run UI Tests with WebDriverManager
+name: Run UI Tests
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_dispatch:
+    inputs:
+      browser:
+        description: "Browser to run the tests on"
+        required: true
+        default: "chrome"  # Default value
+        type: string
+      environment:
+        description: "Environment to run the tests (Test/Stage)"
+        required: true
+        default: "Test"
+        type: string
 
 jobs:
   ui-tests:
@@ -24,7 +30,7 @@ jobs:
           sudo apt-get install -y google-chrome-stable
           sudo apt-get install -y xvfb
 
-      # Step 3: Start Xvfb (Virtual Display for GUI Testing)
+      # Step 3: Start Xvfb
       - name: Start Xvfb
         run: |
           export DISPLAY=:99
@@ -37,7 +43,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: 'maven'
 
       # Step 5: Cache Maven dependencies
       - name: Cache Maven dependencies
@@ -47,25 +52,12 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-maven
 
-      # Step 6: Debug Chrome Environment
-      - name: Debug Chrome Environment
+      # Step 6: Pass Inputs as Environment Variables
+      - name: Set Environment Variables
         run: |
-          google-chrome --version
-          chromedriver --version
-          ls -la /usr/bin/google-chrome
-          echo $DISPLAY
+          echo "BROWSER=${{ github.event.inputs.browser }}" >> $GITHUB_ENV
+          echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
 
-      # Step 7: Install Maven dependencies
-      - name: Install Maven dependencies
-        run: mvn install -DskipTests=true
-
-      # Step 8: Run Selenium UI Tests
+      # Step 7: Run Maven Tests with Parameters
       - name: Run UI Tests
-        run: mvn test
-
-      # Step 9: Upload Test Reports (Optional)
-      - name: Upload Test Reports
-        uses: actions/upload-artifact@v3
-        with:
-          name: test-reports
-          path: target/surefire-reports/
+        run: mvn test -Dbrowser=$BROWSER -Denvironment=$ENVIRONMENT
