@@ -31,11 +31,10 @@ public class BaseTest {
 	public login_Page landingPage;
 
 	protected Map<String, String> credentials = new HashMap<>();
-
+	Properties prop = new Properties();
 
 	public WebDriver initializeDriver() throws IOException {
 
-		Properties prop = new Properties();
 		FileInputStream fis = new FileInputStream(
 				System.getProperty("user.dir") + "/src/main/java/JTAS/Resources/GlobalData.properties");
 		prop.load(fis);
@@ -50,13 +49,14 @@ public class BaseTest {
 //			WebDriverManager.chromedriver().setup();
 			Path tempDir = Files.createTempDirectory("chrome-user-data");
 			ChromeOptions options = new ChromeOptions();
-			
-			options.addArguments("--no-sandbox");       // Bypass OS security model
-		    options.addArguments("--disable-dev-shm-usage"); // Overcome limited resource problems
-		    options.addArguments("--remote-allow-origins=*"); // Address Chrome's CORS policy changes
-		    options.addArguments("--disable-gpu");     // Disable GPU (Optional)
-		    options.addArguments("--headless=new");    // Use headless mode
-		    options.addArguments("--user-data-dir=" + tempDir.toAbsolutePath().toString()); // Unique user data directory
+
+			options.addArguments("--no-sandbox"); // Bypass OS security model
+			options.addArguments("--disable-dev-shm-usage"); // Overcome limited resource problems
+			options.addArguments("--remote-allow-origins=*"); // Address Chrome's CORS policy changes
+			options.addArguments("--disable-gpu"); // Disable GPU (Optional)
+			options.addArguments("--headless=new"); // Use headless mode
+			options.addArguments("--user-data-dir=" + tempDir.toAbsolutePath().toString()); // Unique user data
+																							// directory
 
 			if (browserName.contains("headless")) {
 				options.addArguments("headless");
@@ -98,7 +98,6 @@ public class BaseTest {
 		return screenshotPath; // Return the path to the screenshot
 	}
 
-
 	public void loadTestData() throws IOException {
 		// Using a relative path that resolves to an absolute path
 		String excelPath = System.getProperty("user.dir") + "/resources/TestData.xlsx";
@@ -116,13 +115,12 @@ public class BaseTest {
 		excelUtils.closeWorkbook();
 	}
 
-
 	@BeforeMethod
 	public login_Page launchApplication() throws IOException {
 
 		driver = initializeDriver();
 		landingPage = new login_Page(driver);
-		landingPage.goTo();
+		landingPage.goTo(prop.getProperty("test"));
 
 		return landingPage;
 
