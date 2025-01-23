@@ -89,3 +89,26 @@ jobs:
         with:
           name: test-reports
           path: target/surefire-reports/
+
+      # Step 11: Send Email Notification with Reports
+      - name: Send Email Notification
+        if: always()  # Send email regardless of the workflow status
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVER }}  # SMTP server (e.g., smtp.gmail.com)
+          server_port: ${{ secrets.SMTP_PORT }}      # SMTP port (e.g., 587)
+          username: ${{ secrets.EMAIL_USER }}        # Your email address
+          password: ${{ secrets.EMAIL_PASS }}        # App password or email password
+          subject: "UI Test Results: ${{ job.status }}"
+          to: "recipient@example.com"                # Replace with the recipient's email
+          from: "your-email@example.com"             # Replace with your email
+          body: |
+            Hello,
+            
+            The test workflow has completed with the status: ${{ job.status }}.
+            
+            Attached are the test reports for your reference.
+            
+            Regards,
+            GitHub Actions
+          attachments: target/surefire-reports/*.html  # Attach reports
