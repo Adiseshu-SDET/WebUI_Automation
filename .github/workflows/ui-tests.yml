@@ -1,18 +1,27 @@
-name: Run UI Tests
+name: Run UI Tests with WebDriverManager
 
 on:
+  # Trigger the workflow manually with custom inputs
   workflow_dispatch:
     inputs:
       browser:
-        description: "Browser to run the tests on"
+        description: "Select the browser to run the tests on"
         required: true
-        default: "chrome"  # Default value
+        default: "chrome"  # Default browser
         type: string
+        options:
+          - chrome
+          - firefox
+          - edge
       environment:
-        description: "Environment to run the tests (Test/Stage)"
+        description: "Select the environment to run tests on"
         required: true
-        default: "Test"
+        default: "test"  # Default environment
         type: string
+        options:
+          - test
+          - stage
+          - prod
 
 jobs:
   ui-tests:
@@ -30,7 +39,7 @@ jobs:
           sudo apt-get install -y google-chrome-stable
           sudo apt-get install -y xvfb
 
-      # Step 3: Start Xvfb
+      # Step 3: Start Xvfb (Virtual Display for GUI Testing)
       - name: Start Xvfb
         run: |
           export DISPLAY=:99
@@ -43,6 +52,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+          cache: 'maven'
 
       # Step 5: Cache Maven dependencies
       - name: Cache Maven dependencies
@@ -52,12 +62,30 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-maven
 
-      # Step 6: Pass Inputs as Environment Variables
+      # Step 6: Debug Chrome Environment
+      - name: Debug Chrome Environment
+        run: |
+          google-chrome --version
+          chromedriver --version
+          echo $DISPLAY
+
+      # Step 7: Set Environment Variables from Inputs
       - name: Set Environment Variables
         run: |
           echo "BROWSER=${{ github.event.inputs.browser }}" >> $GITHUB_ENV
           echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
 
-      # Step 7: Run Maven Tests with Parameters
+      # Step 8: Install Maven dependencies
+      - name: Install Maven dependencies
+        run: mvn install -DskipTests=true
+
+      # Step 9: Run Selenium UI Tests
       - name: Run UI Tests
         run: mvn test -Dbrowser=$BROWSER -Denvironment=$ENVIRONMENT
+
+      # Step 10: Upload Test Reports (Optional)
+      - name: Upload Test Reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-reports
+          path: target/surefire-reports/
